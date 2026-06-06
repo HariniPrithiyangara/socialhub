@@ -1,6 +1,10 @@
 import axios from 'axios';
 
-const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+let API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// Automatically append /api if it is missing from the environment variable configuration
+if (!API_BASE.replace(/\/$/, '').endsWith('/api')) {
+  API_BASE = `${API_BASE.replace(/\/$/, '')}/api`;
+}
 
 // ── Axios instance ─────────────────────────────────────────────────────────────
 const api = axios.create({
