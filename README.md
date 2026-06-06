@@ -1,157 +1,126 @@
 # SocialHub
+A full-stack, responsive mini social media feed inspired by commercial networking applications.
 
-## Description
+## Live Demo
+- **Frontend URL**: [https://socialhub-pied-mu.vercel.app](https://socialhub-pied-mu.vercel.app)
+- **Backend API URL**: [https://socialhub-8x81.onrender.com](https://socialhub-8x81.onrender.com)
+- **API Health Check**: [https://socialhub-8x81.onrender.com/api/health](https://socialhub-8x81.onrender.com/api/health)
 
-SocialHub is a full-stack, responsive mini social media application built with a modern React.js (Vite) client, Node.js (Express) backend API, and a MongoDB database. 
+## Project Overview
+Overloading database connections with separate collections can degrade system scalability for mini applications. SocialHub solves this by building a lightweight full-stack feed application featuring user authentication, cursor pagination, search filtering, and live notifications. It strictly respects the two-collection database layout requirement (Users and Posts) by nesting notification subdocuments inside the User document, ensuring instantaneous updates for likes and comments without performance bottleneck.
 
-- **What was your motivation?**
-  Our motivation was to build a modern, high-performance social media feed inspired by commercial networking applications. We wanted to design a clean, responsive 3-column layout using vanilla CSS and React-Bootstrap to highlight design skills without relying on TailwindCSS utility libraries.
-- **Why did you build this project?**
-  This project was built to master the integration of Single Page Applications (SPAs) with secure backend APIs, database indexing, and user interaction hooks. It represents a hands-on implementation of cursor-based pagination, preflight CORS security, token validation on mount, and URL-bound state management.
-- **What problem does it solve?**
-  SocialHub solves the problem of high-latency social updates. It implements instant like and comment state syncing on the client side, a direct header search engine that updates query parameters for shareable search states (`?search=query`), and a lightweight notification system that records user interactions inside subdocument arrays (adhering to a strict two-collection limit).
-- **What did you learn?**
-  We learned how to design efficient MongoDB aggregation pipelines for paginated sorting, how to write fallback route rewrites for client routing (on Vercel), how to build automatic URL path normalization for APIs, and how to safely hook event triggers to update embedded schemas.
+## Features
+- **Secure Authentication**: Password encryption using bcryptjs and persistent JWT validation checks on client mount.
+- **Text & Image Posts**: Users can publish posts containing text, an image, or both. Either field is sufficient.
+- **Dynamic Post Search**: Instantly filter feed posts using a header search bar tied directly to URL query parameters (`?search=query`).
+- **Live User Notifications**: Automatically triggers notifications in the user's dashboard when other users like or comment on their posts.
+- **Cursor Pagination**: Fetches feed posts in chunks of 10 for optimized database querying.
+- **Interactive Actions**: Instant visual feedback for toggling post likes and publishing comments.
 
----
+## Tech Stack
+- **Frontend**: React 18, React-Bootstrap, React-Router-Dom, Axios, custom CSS
+- **Backend**: Node.js, Express.js, Multer
+- **Database**: MongoDB Atlas (Mongoose NoSQL)
+- **DevOps**: Vercel (Frontend), Render (Backend)
 
-## Table of Contents
-
-- [Deployment Links](#deployment-links)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Credits](#credits)
-- [License](#license)
-- [Features](#features)
-- [Tests](#tests)
-
----
-
-## Deployment Links
-
-The application is deployed live in production:
-- **Frontend Client (Vercel)**: [https://socialhub-pied-mu.vercel.app](https://socialhub-pied-mu.vercel.app)
-- **Backend Server API (Render)**: [https://socialhub-8x81.onrender.com](https://socialhub-8x81.onrender.com)
-- **API Health Endpoint**: [https://socialhub-8x81.onrender.com/api/health](https://socialhub-8x81.onrender.com/api/health)
-
----
+## Project Structure
+```
+social/
+├── backend/          # Node.js + Express API
+│   ├── src/
+│   │   ├── controllers/   # Request handlers (authController, postController)
+│   │   ├── middleware/    # authMiddleware, uploadMiddleware (multer image filter)
+│   │   ├── models/        # Database Schemas (User.js with Notifications, Post.js)
+│   │   └── routes/        # Router declarations (authRoutes, postRoutes)
+│   ├── uploads/           # Local storage for uploaded images
+│   ├── server.js          # App initialization & DB connection
+│   └── package.json
+└── frontend/         # React + Vite Client
+    ├── src/
+    │   ├── api/           # Axios instance & endpoints mapping (index.js)
+    │   ├── components/
+    │   │   ├── layout/    # Structural templates (Navbar, Sidebar, RightSidebar)
+    │   │   ├── post/      # Feature components (CreatePostBox, PostCard, CommentSection)
+    │   │   └── ui/        # Shared elements (Avatar generator, Skeletons)
+    │   ├── context/       # Authentication Provider (AuthContext)
+    │   ├── pages/         # Full layouts (AuthPage, FeedPage)
+    │   └── index.css      # Core design system stylesheet
+    └── package.json
+```
 
 ## Installation
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/HariniPrithiyangara/socialhub.git
+   cd socialhub
+   ```
+2. **Backend Setup**
+   ```bash
+   cd backend
+   npm install
+   # Configure necessary environment variables
+   npm run dev
+   ```
+3. **Frontend Setup**
+   ```bash
+   cd ../frontend
+   npm install
+   # Configure necessary environment variables
+   npm run dev
+   ```
 
-To run this project locally, follow these steps:
+## Environment Variables
+Create `.env` files in the respective directories with the following configurations:
 
-### 1. Backend Service Configuration
-Navigate to the `backend` folder and install dependencies:
-```bash
-cd backend
-npm install
-```
-Create a `.env` file in the `backend/` root directory and add the following:
+### Backend (`backend/.env`)
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_atlas_connection_string
-JWT_SECRET=your_jwt_signing_key
-JWT_EXPIRES_IN=7d
 NODE_ENV=development
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+JWT_EXPIRES_IN=7d
 FRONTEND_URL=http://localhost:5173
 ```
-Launch the development server:
-```bash
-npm run dev
-```
 
-### 2. Frontend Client Configuration
-Navigate to the `frontend` folder and install dependencies:
-```bash
-cd ../frontend
-npm install
-```
-Create a `.env` file in the `frontend/` root directory:
+### Frontend (`frontend/.env`)
 ```env
 VITE_API_URL=http://localhost:5000/api
 VITE_APP_NAME=SocialHub
 ```
-Launch the Vite client:
-```bash
-npm run dev
-```
-Open `http://localhost:5173` in your browser.
 
----
+## API Endpoints
+- **POST `/api/auth/register`** - Registers a new user account.
+- **POST `/api/auth/login`** - Authenticates credentials and issues a JWT.
+- **GET `/api/auth/me`** - Retrieves authenticated user details.
+- **GET `/api/auth/users`** - Lists registered users for contacts.
+- **GET `/api/auth/notifications`** - Retrieves likes/comments notifications.
+- **PUT `/api/auth/notifications/read`** - Marks all notifications as read.
+- **GET `/api/posts`** - Gets feed posts (paginated, supports `?search=query` and `?sort=recent\|mostLiked\|mostCommented`).
+- **POST `/api/posts`** - Creates a post (accepts text and/or image upload).
+- **PUT `/api/posts/:id/like`** - Toggles like status (triggers notification).
+- **POST `/api/posts/:id/comment`** - Submits comment (triggers notification).
+- **GET `/api/posts/:id/comments`** - Gets comments.
+- **DELETE `/api/posts/:id`** - Deletes own post.
 
-## Usage
+## Testing
+To run the backend health connection test:
+- Start the server and visit `http://localhost:5000/api/health`.
 
-Users can browse public posts on the main feed page, search for posts using the search bar, register new accounts, publish text and image posts, like posts, comment on posts, and receive live notifications.
+## Deployment
+- **Frontend**: Vercel
+- **Backend**: Render
+- **Database**: MongoDB Atlas
 
-### Public Feed Layout
-Below is the post feed displaying likes and comments, complete with responsive sidebars for guidelines and contacts:
+## Security Considerations
+- **JWT Verification**: Validates request authorization tokens on all protected routes.
+- **Robust CORS Rules**: Implements strict preflight CORS headers, automatically filtering subdomains and stripping trailing slashes.
+- **Helmet Protection**: Sets standard secure HTTP headers.
+- **Image Upload Filters**: Restricts uploads strictly to WebP, JPEG, PNG, or GIF formats under 5MB.
 
-![SocialHub Feed Page](assets/images/feed.png)
+## Future Improvements
+- **WebSocket Alerts**: Push notifications for likes/comments instantly using Socket.io.
+- **Watchlists/Faves**: Pin specific posts or follow individual creators.
+- **Direct Messages**: Simple inbox for messaging other users in the contact sidebar.
 
-### User Notifications
-When other users like or comment on your posts, you will instantly receive notification badges on the navbar bell icon, displaying the interaction details when clicked:
-
-![Dropdown Notifications](assets/images/notifications.png)
-
----
-
-## Credits
-
-### Collaborators
-- **Harini Prithiyangara** - [GitHub Profile](https://github.com/HariniPrithiyangara)
-
-### Third-Party Assets
-- Icons provided by [React Icons](https://react-icons.github.io/react-icons/) (specifically `react-icons/fi`, `react-icons/fc`, and `react-icons/bs`).
-- Global notification alerts powered by [React Hot Toast](https://react-hot-toast.com/).
-- Routing handled by [React Router Dom v6](https://reactrouter.com/).
-- Server middleware: [Multer](https://github.com/expressjs/multer) for image processing, [Cors](https://github.com/expressjs/cors), [Helmet](https://helmetjs.github.io/), and [Morgan](https://github.com/expressjs/morgan).
-
----
-
-## License
-
-This project is licensed under the **MIT License** — see the details below:
-
-```
-MIT License
-
-Copyright (c) 2026 Harini Prithiyangara
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-```
-
----
-
-## Features
-
-- **🔐 Token Authentication**: User login and registration using securely encrypted passwords (bcryptjs) and JWT validation.
-- **🔍 Query-Bound Search**: Real-time filtering of feed posts using URL search query parameters.
-- **🔔 Live Notifications**: An embedded user subdocument notification tracking system for likes and comments.
-- **🖼️ Image Uploads**: Handles image file validation (maximum 5MB, JPG/PNG/WEBP/GIF only) via Multer disk storage.
-- **📑 Cursor Pagination**: Feed fetches posts dynamically in groups of 10.
-- **📱 Responsive Flex Grid**: Premium design tailored for desktop, tablet, and mobile browsers.
-
----
-
-## Tests
-
-To verify the app locally, run the following tests:
-- **Backend Connection Test**: Verify the API server health by visiting `http://localhost:5000/api/health`.
-- **Axios API Integration Check**: Confirm request headers include the `Bearer <token>` payload inside the request inspector.
-- **Client Route Fallback Check**: Refresh your browser at `http://localhost:5173/auth` to confirm that the app successfully loads without returning a 404.
+## Author
+Harini Prithiyangara
