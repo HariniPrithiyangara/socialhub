@@ -23,15 +23,21 @@ app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (Postman, curl, mobile apps)
+      // Allow requests with no origin (like postman or mobile apps)
       if (!origin) return callback(null, true);
-      // In development: allow any localhost port
-      if (process.env.NODE_ENV !== 'production' && /^http:\/\/localhost:\d+$/.test(origin)) {
+      
+      const cleanOrigin = origin.replace(/\/$/, '');
+      const cleanFrontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : '';
+      
+      // Allow localhost, the configured frontend URL, or any Vercel deployments
+      if (
+        /^http:\/\/localhost:\d+$/.test(cleanOrigin) ||
+        cleanOrigin === cleanFrontendUrl ||
+        cleanOrigin.endsWith('.vercel.app')
+      ) {
         return callback(null, true);
       }
-      // In production: check against allowed list
-      const allowed = [process.env.FRONTEND_URL, 'https://your-app.vercel.app'].filter(Boolean);
-      if (allowed.includes(origin)) return callback(null, true);
+      
       callback(new Error(`CORS blocked: ${origin}`));
     },
     credentials: true,
