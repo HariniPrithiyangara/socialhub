@@ -1,10 +1,7 @@
 # SocialHub
 A full-stack, responsive mini social media feed inspired by commercial networking applications.
 
-## Live Demo
-- **Frontend URL**: [https://socialhub-pied-mu.vercel.app](https://socialhub-pied-mu.vercel.app)
-- **Backend API URL**: [https://socialhub-8x81.onrender.com](https://socialhub-8x81.onrender.com)
-- **API Health Check**: [https://socialhub-8x81.onrender.com/api/health](https://socialhub-8x81.onrender.com/api/health)
+[![Live Demo](https://img.shields.io/badge/%E2%96%B2%20LIVE%20DEMO-socialhub--pied--mu.vercel.app-007ec6?style=for-the-badge&logo=vercel&logoColor=white)](https://socialhub-pied-mu.vercel.app)
 
 ## Project Overview
 Overloading database connections with separate collections can degrade system scalability for mini applications. SocialHub solves this by building a lightweight full-stack feed application featuring user authentication, cursor pagination, search filtering, and live notifications. It strictly respects the two-collection database layout requirement (Users and Posts) by nesting notification subdocuments inside the User document, ensuring instantaneous updates for likes and comments without performance bottleneck.
@@ -107,9 +104,9 @@ To run the backend health connection test:
 - Start the server and visit `http://localhost:5000/api/health`.
 
 ## Deployment
-- **Frontend**: Vercel
-- **Backend**: Render
-- **Database**: MongoDB Atlas
+- **Frontend**: Hosted on [Vercel](https://socialhub-pied-mu.vercel.app)
+- **Backend API**: Hosted on [Render](https://socialhub-8x81.onrender.com) (Health: [API Health Status](https://socialhub-8x81.onrender.com/api/health))
+- **Database**: Hosted on MongoDB Atlas
 
 ## Security Considerations
 - **JWT Verification**: Validates request authorization tokens on all protected routes.
