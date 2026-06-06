@@ -2,7 +2,13 @@
 
 SocialHub is a full-stack, responsive mini social networking application built with **React.js (Vite)**, **Node.js (Express)**, and **MongoDB Atlas**. It is inspired by modern social feeds like TaskPlanet, providing a polished and premium UI built purely with custom CSS rules and React-Bootstrap (without TailwindCSS).
 
-This application was developed as a full-stack project featuring pagination, user authentication, media uploads, query search filtering, and live user notifications.
+---
+
+## 🔗 Live Deployment Links
+
+- **Frontend Client (Vercel)**: [https://socialhub-pied-mu.vercel.app](https://socialhub-pied-mu.vercel.app)
+- **Backend Server API (Render)**: [https://socialhub-8x81.onrender.com](https://socialhub-8x81.onrender.com)
+- **API Health Check**: [https://socialhub-8x81.onrender.com/api/health](https://socialhub-8x81.onrender.com/api/health)
 
 ---
 
@@ -10,7 +16,7 @@ This application was developed as a full-stack project featuring pagination, use
 
 - **🔐 Robust Authentication**: Secure user registration and login utilizing JSON Web Tokens (JWT) stored in LocalStorage, with token validation on application mount.
 - **📝 Create Posts**: Users can publish text updates, images, or both. Either text or image is sufficient to submit a post.
-- **💬 Interactivity (Likes & Comments)**: Instant visual feedback when liking a post or writing inline comments. 
+- **💬 Interactivity (Likes & Comments)**: Instant visual feedback when liking a post or writing inline comments.
 - **🔍 Full-Text Feed Search**: A search engine built directly into the navigation header. Users can filter posts by text content. The search state is bound to URL query parameters (`?search=query`) for shareable, bookmarkable search results.
 - **🔔 Live Notifications**: Notifications generated instantly when other users like or comment on your posts. Notifications are stored efficiently as embedded subdocuments inside the User document to respect database structure guidelines.
 - **⚡ Performance & Pagination**: The main feed implements efficient cursor pagination, fetching posts in chunks to minimize bandwidth and DB pressure.
@@ -50,7 +56,7 @@ social/
 
 ### Prerequisites
 - Node.js >= 18
-- MongoDB Atlas cluster (or a local MongoDB instance)
+- MongoDB Atlas account
 
 ### 1. Run the Backend Server
 Navigate to the `backend` directory, install dependencies, configure the environmental variables, and run the nodemon development server.
@@ -58,7 +64,7 @@ Navigate to the `backend` directory, install dependencies, configure the environ
 cd backend
 npm install
 ```
-Create a `.env` file in the root of the `backend/` directory (matching the variables in `.env.example`):
+Create a `.env` file in the root of the `backend/` directory:
 ```env
 PORT=5000
 MONGODB_URI=your_mongodb_connection_string
@@ -108,8 +114,8 @@ Open `http://localhost:5173` in your browser.
 
 ---
 
-## 🚀 Deployment Instructions
+## 🚀 Deployment
 
-- **Frontend**: Deploy `frontend/` directory to **Vercel** or **Netlify**. Ensure the build directory is `dist`, compile command is `vite build`, and configure `VITE_API_URL` to target your production backend URL.
-- **Backend**: Deploy `backend/` directory to **Render**, **Railway**, or **Heroku**. Set the Node environment variables appropriately.
-- **Database**: Host on **MongoDB Atlas** and configure network whitelist settings to allow incoming requests from all IP addresses (`0.0.0.0/0`) or your specific deployment IPs.
+- **Frontend**: Deployed to Vercel (Root: `/frontend`, Output: `dist`, API URL variable: `VITE_API_URL`)
+- **Backend**: Deployed to Render (Root: `/backend`, Build: `yarn`, Start: `yarn start`, Env variables: DB connection URI, JWT secrets, CORS allowed origin URL)
+- **Database**: Hosted on MongoDB Atlas.
